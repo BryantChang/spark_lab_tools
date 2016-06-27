@@ -1,4 +1,5 @@
  ## 混合负载自动生成脚本
+ 
  ### 1、目录结构
  
  ```
@@ -22,10 +23,12 @@
  ```
  
  ### 2、配置文件使用及配置
+ 
  #### 2.1 env.sh
+
 主要作用：设置和负载生成脚本相关的参数如spark目录，tachyon目录本次实验主要使用spark-bench所以需要设置各个应用的可执行文件以及配置文件的路径，以方便脚本生成 ,文件的主要内容如下：
 
- ```bash
+```bash
 #!/bin/bash
 
 # Configures for generate submit script.
@@ -65,33 +68,40 @@ lr_config_basedir=LogisticRegression/conf
 
 #################WordCount######################
 wordcount_executable_basedir=KMeans/bin
-wordcount_config_basedir=/KMeans/conf
- ```
- ### 2.2 experiment_config
- 主要作用：该文件主要用于设置各个实验组的常规实验参数，如CPU，内存等，文件内容及格式如下：
- ```
- ##cpu&memory:
+wordcount_config_basedir=/KMeans/conf 
+```
+### 2.2 experiment_config
+ 
+主要作用：该文件主要用于设置各个实验组的常规实验参数，如CPU，内存等，文件内容及格式如下：
+ 
+```
+##cpu&memory:
 1 1,1g,0.15 3,1g,0.15 46,2g,0.15 46,4g,0.15 46,4g,0.15 92,12g,0.15 69,6g,0.15
- ```
- ### 2.3 plan.conf
- 主要作用：该文件是实验的主要计划配置，用户可以将所有需要进行的进行的实验按指定格式写入该文件，脚本将自动根据该计划执行相应的实验，该文件内容如下：
- ```
-  #format workloadType_platform_labno1(cpu/mem)_labno2_labno3_predict-step
+```
+### 2.3 plan.conf
+ 
+主要作用：该文件是实验的主要计划配置，用户可以将所有需要进行的进行的实验按指定格式写入该文件，脚本将自动根据该计划执行相应的实验，该文件内容如下：
 
- cpumem_spark_1_3_3_2
+```
+#format workloadType_platform_labno1(cpu/mem)_labno2_labno3_predict-step
+
+cpumem_spark_1_3_3_2
  
- #cpu：代表负载类型，有CPU、IO、MIX。如果是cpu密集型，那么需要去寻找这种类型混合负载中的应用和配比。
- #hadoop：spark、tachyon、smspark
- #1：cpu mem实验组号
- #3：第一个影响因子实验组号
- #3：第二个影响因子实验组号
- #2：预测步长
- ```
+#cpu：代表负载类型，有CPU、IO、MIX。如果是cpu密集型，那么需要去寻找这种类型混合负载中的应用和配比。
+#hadoop：spark、tachyon、smspark
+#1：cpu mem实验组号
+#3：第一个影响因子实验组号
+#3：第二个影响因子实验组号
+#2：预测步长
+```
  
- ### 2.4 workload_cpumem.conf
- 主要作用：该文件的主要作用是对应用进行配比，在总数量一定的应用中可以指定每一个区间应用的种类及个数，脚本将根据这些配置生成最终需要执行的脚本，该文件内容如下：
- ```
- # CPU--MEM Intensive
+### 2.4 workload_cpumem.conf
+
+主要作用：该文件的主要作用是对应用进行配比，在总数量一定的应用中可以指定每一个区间应用的种类及个数，脚本将根据这些
+配置生成最终需要执行的脚本，该文件内容如下：
+
+```
+# CPU--MEM Intensive
 # format:jobid script_writer jobAmount
 0 bryantchang.workload.generator.Tpcds1Script 36
 1 bryantchang.workload.generator.Tpcds1Script 3
@@ -100,41 +110,46 @@ wordcount_config_basedir=/KMeans/conf
 4 bryantchang.workload.generator.KMeansScript 2
 5 bryantchang.workload.generator.Tpcds1Script 2
 6 bryantchang.workload.generator.PageRankScript 6
- ```
- ## 3、 bin目录中各个脚本的使用方法
+```
+## 3、 bin目录中各个脚本的使用方法
  
- ### 3.1 plan.sh
- > * 参数  无参数
- > * 预处理 将2中配置文件写全
- > * 使用方法 sh bin/plan.sh
- 
- ### 3.2 setup.sh
- > * 参数  
- >> * spark_version
- >> * log_dir
- > * 预处理 将该脚本开始处环境变量配好
- > * 使用方法 sh bin/setup.sh spark log_dir
- 
- ### 3.3 workload_gen.sh
- > * 参数  
- >> * workload_source_conf=$1
- >> * dest_shell_name=$2
- >> * env_path=$3
- >> * lib_path=$4
- >> * cpu_mem_no=$5
- >> * faction1=$6
- >> * faction2=$7
- >> * prediction_step=$8
- >> * log_path=$9
- >> * log_dir
- > * 预处理 将该脚本开始处环境变量配好
- > * 使用方法 sh bin/workload_gen.sh workload_source_conf_path dest_path env_path lib_path cpu_mem_no faction1 faction2 prediction_step log_path
- 
- ### 3.4 shut_down.sh
- > * 参数  
- >> * running_script  ##脚本自动生成的文件
- > * 预处理 将该脚本开始处环境变量配好
- > * 使用方法 sh bin/shutdown.sh running_script
- 
- ## 4、 tools中脚本的使用方法
+### 3.1 plan.sh
+
+> * 参数  无参数
+> * 预处理 将2中配置文件写全
+> * 使用方法 sh bin/plan.sh
+
+### 3.2 setup.sh
+
+> * 参数  
+>> * spark_version
+>> * log_dir
+> * 预处理 将该脚本开始处环境变量配好
+> * 使用方法 sh bin/setup.sh spark log_dir
+
+### 3.3 workload_gen.sh
+
+> * 参数  
+>> * workload_source_conf=$1
+>> * dest_shell_name=$2
+>> * env_path=$3
+>> * lib_path=$4
+>> * cpu_mem_no=$5
+>> * faction1=$6
+>> * faction2=$7
+>> * prediction_step=$8
+>> * log_path=$9
+>> * log_dir
+> * 预处理 将该脚本开始处环境变量配好
+> * 使用方法 sh bin/workload_gen.sh workload_source_conf_path dest_path env_path lib_path cpu_mem_no faction1 faction2 prediction_step log_path
+
+### 3.4 shut_down.sh
+
+> * 参数  
+>> * running_script  ##脚本自动生成的文件
+> * 预处理 将该脚本开始处环境变量配好
+> * 使用方法 sh bin/shutdown.sh running_script
+
+## 4、 tools中脚本的使用方法
+
 参见 [Linux系统小工具](https://github.com/BryantChang/linux-and-spark-tools)
