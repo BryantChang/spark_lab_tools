@@ -1,30 +1,30 @@
- ## 混合负载自动生成脚本
- 
- ### 1、目录结构
- 
- ```
- -scripts
-     -bin       ###执行脚本（可单独使用）
-        -plan.sh            ###脚本执行主流程
-        -setup.sh           ###环境切换，平台环境变量设置
-        -workload_gen.sh    ###调用脚本生成模块
-        -shutdown.sh        ###停止所有提交任务
-     -config  ###配置文件
-        -experiment_config  ###实验具体参数设置及变动(例如CPU和MEM的变化等)
-        -env.sh             ###相关环境变量（包括负载主目录，负载配置文件路径等）
-        -plan.conf          ###实验计划配置，后续脚本将按此计划依次执行
-        -workload_cpumem.conf ###应用配比文件（根据不同性质进行配置）
-    -lib    ###负载执行脚本jar包
-    -script_to_run  ###最终生成执行的脚本位置
-    -logs   ###生成过程中的行为日志
-    -tools  ###其余相关工具
-        -linux_tools  ###系统相关工具（多为批量命令相关）
-        -spark_tools  ###spark系统相关操作
- ```
- 
- ### 2、配置文件使用及配置
- 
- #### 2.1 env.sh
+## 混合负载自动生成脚本
+
+### 1、目录结构
+
+```
+-scripts
+ -bin       ###执行脚本（可单独使用）
+    -plan.sh            ###脚本执行主流程
+    -setup.sh           ###环境切换，平台环境变量设置
+    -workload_gen.sh    ###调用脚本生成模块
+    -shutdown.sh        ###停止所有提交任务
+ -config  ###配置文件
+    -experiment_config  ###实验具体参数设置及变动(例如CPU和MEM的变化等)
+    -env.sh             ###相关环境变量（包括负载主目录，负载配置文件路径等）
+    -plan.conf          ###实验计划配置，后续脚本将按此计划依次执行
+    -workload_cpumem.conf ###应用配比文件（根据不同性质进行配置）
+-lib    ###负载执行脚本jar包
+-script_to_run  ###最终生成执行的脚本位置
+-logs   ###生成过程中的行为日志
+-tools  ###其余相关工具
+    -linux_tools  ###系统相关工具（多为批量命令相关）
+    -spark_tools  ###spark系统相关操作
+```
+
+### 2、配置文件使用及配置
+
+#### 2.1 env.sh
 
 主要作用：设置和负载生成脚本相关的参数如spark目录，tachyon目录本次实验主要使用spark-bench所以需要设置各个应用的可执行文件以及配置文件的路径，以方便脚本生成 ,文件的主要内容如下：
 
